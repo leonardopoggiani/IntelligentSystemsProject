@@ -4,7 +4,7 @@ close all
 clc
 
 %Load datasets
-dataset_ = load('datasets\dataset.mat'); 
+dataset_ = load('../datasets/dataset.mat'); 
 dataset = table2array(dataset_.dataset);
 
 %Load results obtained from sequential feature selection

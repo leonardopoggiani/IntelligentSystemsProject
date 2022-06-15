@@ -4,13 +4,13 @@ close all
 clc
 
 % Config variables
-% times_sequentialfs = 100;
-times_sequentialfs = 5;
+times_sequentialfs = 100;
+% times_sequentialfs = 5;
 outliers_removal_method = 'median';
 
 %% Preparation of Data
 % Removal of non numerical values
-dataset = load('..\datasets\dataset.mat'); 
+dataset = load('../datasets/dataset.mat'); 
 dataset = table2array(dataset.dataset);
 inf_val = isinf(dataset);
 [rows_inf, col_inf] = find(inf_val == 1);
