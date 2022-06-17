@@ -26,7 +26,9 @@ fprintf("%i outliers removed\n", ret);
 
 %% Data Balancing
 
-EXTRACT_VALENCE = 0;
+EXTRACT_VALENCE = 1;
+EXTRACT_AROUSAL = 0;
+BALANCE = 1;
 
 % getting arousal and valence levels
 arousal_level  = clean_dataset(:,1);
@@ -71,7 +73,6 @@ rep = 40;
 row_to_check = final_rows;
 
 if BALANCE == 1
-
     for k = 1:rep
         for i = 1:row_to_check
             if (clean_dataset(i,1)==possible_values(min_arousal) && clean_dataset(i,2)~=possible_values(max_valence)) || (clean_dataset(i,1)~=possible_values(max_arousal) && clean_dataset(i,2)==possible_values(min_valence))
@@ -139,47 +140,49 @@ sequentialfs_rep = 30;
 
 
 %% Features extraction for Arousal
-features_arousal = [zeros(1,54); 1:54]';
-counter_feat_sel_arousal = zeros(54,1)';
-for i = 1:sequentialfs_rep
-    fprintf("Iteration %i\n", i);
-    
-    c = cvpartition(y_train_arousal, 'k', 10);
-    option = statset('display','iter','useParallel',true);
-    [features_selected_for_arousal, ~]  = sequentialfs(@myfun, x_train, y_train_arousal, 'cv', c, 'opt', option, 'nFeatures', 5);
-    
-    % Fetch useful indexes from result of latter sequentialfs
-   p=1; 
-   for j = 1:54
-        if features_selected_for_arousal(j) == 1
-            counter_feat_sel_arousal(j) = counter_feat_sel_arousal(j) + 1;
+if EXTRACT_AROUSAL == 1
+    features_arousal = [zeros(1,54); 1:54]';
+    counter_feat_sel_arousal = zeros(54,1)';
+    for i = 1:sequentialfs_rep
+        fprintf("Iteration %i\n", i);
+
+        c = cvpartition(y_train_arousal, 'k', 10);
+        option = statset('display','iter','useParallel',true);
+        [features_selected_for_arousal, ~]  = sequentialfs(@myfun, x_train, y_train_arousal, 'cv', c, 'opt', option, 'nFeatures', 5);
+
+        % Fetch useful indexes from result of latter sequentialfs
+       p=1; 
+       for j = 1:54
+            if features_selected_for_arousal(j) == 1
+                counter_feat_sel_arousal(j) = counter_feat_sel_arousal(j) + 1;
+            end
         end
     end
+
+
+    fprintf("\n");
+    fprintf("*** AROUSAL: "); 
+    fprintf("\n");
+
+    disp(features_arousal);
+    fprintf("Sorting features");
+    features_arousal = sortrows(features_arousal, 1, 'descend');
+    disp(features_arousal);
+
+    % Getting the 10 best arousal features
+    arousal_best = features_arousal(1:10, 2);
+
+    best_arousal_training.x_train = normalize(x_train(:, arousal_best));
+    best_arousal_training.y_train = y_train_arousal';
+    % Save struct
+    save("data/training_arousal.mat", "best_arousal_training");
+
+    best_arousal_testing.x_test = normalize(x_test(:, arousal_best));
+    best_arousal_testing.y_test = y_test_arousal';
+    save("data/testing_arousal.mat", "best_arousal_testing");
+    fprintf("Arousal features saved\n");
+
 end
-    
-
-fprintf("\n");
-fprintf("*** AROUSAL: "); 
-fprintf("\n");
-
-disp(features_arousal);
-fprintf("Sorting features");
-features_arousal = sortrows(features_arousal, 1, 'descend');
-disp(features_arousal);
-
-% Getting the 10 best arousal features
-arousal_best = features_arousal(1:10, 2);
-
-best_arousal_training.x_train = normalize(x_train(:, arousal_best));
-best_arousal_training.y_train = y_train_arousal';
-% Save struct
-save("data/training_arousal.mat", "best_arousal_training");
-
-best_arousal_testing.x_test = normalize(x_test(:, arousal_best));
-best_arousal_testing.y_test = y_test_arousal';
-save("data/testing_arousal.mat", "best_arousal_testing");
-fprintf("Arousal features saved\n");
-
 %% Features extraction for valence
 
 if EXTRACT_VALENCE == 1
