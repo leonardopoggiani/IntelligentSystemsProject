@@ -26,8 +26,8 @@ fprintf("%i outliers removed\n", ret);
 
 %% Data Balancing
 
-EXTRACT_VALENCE = 1;
-EXTRACT_AROUSAL = 0;
+EXTRACT_VALENCE = 0;
+EXTRACT_AROUSAL = 1;
 BALANCE = 1;
 
 % getting arousal and valence levels
