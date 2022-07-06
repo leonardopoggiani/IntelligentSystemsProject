@@ -1,0 +1,55 @@
+[System]
+Name='Mamdani'
+Type='mamdani'
+Version=2.0
+NumInputs=3
+NumOutputs=1
+NumRules=9
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='GSR1'
+Range=[-4 3]
+NumMFs=3
+MF1='Low':'trapmf',[-6.63 -4.29 -0.825581395348838 0.0476]
+MF2='Medium':'trimf',[-1.05 0.373150105708245 1.94]
+MF3='High':'trapmf',[0.477 1.37949260042283 3.29 5.62]
+
+[Input2]
+Name='ECG28'
+Range=[-4 3]
+NumMFs=3
+MF1='Low':'trapmf',[-6.62 -4.29 -1.15 -0.440803382663848]
+MF2='Medium':'trimf',[-1.982 -0.5897 0.8027]
+MF3='High':'trapmf',[0.39 1.80866807610994 3.3 5.63]
+
+[Input3]
+Name='ECG30'
+Range=[-4 3]
+NumMFs=3
+MF1='Low':'trapmf',[-6.62 -4.29 -2.20190274841438 -1.37]
+MF2='Medium':'trimf',[-2.1 -0.456 1.27589852008457]
+MF3='High':'trapmf',[0.0476 0.654334038054968 3.27 5.61]
+
+[Output1]
+Name='Arousal'
+Range=[1 9]
+NumMFs=3
+MF1='Low':'trimf',[-2.333 1 4.333]
+MF2='Medium':'trimf',[1.665 5 8.333]
+MF3='High':'trimf',[5.667 9 12.33]
+
+[Rules]
+1 0 0, 1 (1) : 2
+2 0 0, 2 (1) : 2
+3 0 0, 3 (1) : 2
+0 1 0, 2 (1) : 2
+0 2 0, 1 (1) : 2
+0 3 0, 3 (1) : 2
+0 0 1, 2 (1) : 2
+0 0 2, 1 (1) : 2
+0 0 3, 3 (1) : 2

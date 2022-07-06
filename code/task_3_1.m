@@ -39,9 +39,9 @@ if MLP_AROUSAL == 1
     mlp_arousal.divideParam.trainRatio = 0.7;
     mlp_arousal.divideParam.testRatio = 0.1;
     mlp_arousal.divideParam.valRatio = 0.2;
-    mlp_arousal.trainParam.showCommandLine=1;
+    mlp_arousal.trainParam.showCommandLine = 1;
     %mlp_arousal.trainParam.showWindow=0;
-    mlp_arousal.trainParam.epochs =110;
+    mlp_arousal.trainParam.epochs = 110;
     %Training
     [mlp_arousal, tr] = train(mlp_arousal, x_train_arousal, y_train_arousal);
     view(mlp_arousal);
@@ -57,15 +57,15 @@ end
 %% MLP for Valence
 
 if MLP_VALENCE == 1
-    %Creation of MLP
+    % Creation of MLP
     hiddenLayerSize_valence = 35;
     mlp_valence = fitnet(hiddenLayerSize_valence);
     mlp_valence.divideParam.trainRatio = 0.7;
     mlp_valence.divideParam.testRatio = 0.1;
     mlp_valence.divideParam.valRatio = 0.2;
-    mlp_valence.trainParam.showCommandLine=1;
+    mlp_valence.trainParam.showCommandLine = 1;
     %mlp_valence.trainParam.showWindow=0;
-    mlp_valence.trainParam.epochs =110;
+    mlp_valence.trainParam.epochs = 110;
     %Training
     [mlp_valence, tr_v] = train(mlp_valence, x_train_valence, y_train_valence);
     view(mlp_valence);
