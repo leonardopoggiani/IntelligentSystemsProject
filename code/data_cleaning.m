@@ -26,7 +26,7 @@ fprintf("%i outliers removed\n", ret);
 
 %% Data Balancing
 
-EXTRACT_VALENCE = 0;
+EXTRACT_VALENCE = 1;
 EXTRACT_AROUSAL = 1;
 BALANCE = 1;
 
@@ -136,7 +136,7 @@ x_test = features(idxTesting, :);
 y_test_arousal = target_arousal(idxTesting, :);
 y_test_valence = target_valence(idxTesting, :);
 
-sequentialfs_rep = 30;
+sequentialfs_rep = 10;
 
 
 %% Features extraction for Arousal
@@ -240,7 +240,7 @@ best3.y_test = y_test_arousal';
 best3.best_features=arousal_best3;
 best3.y_values= possible_values;
 % Save struct
-save("data/best3.mat", "best3");
+save("data/best_selected_features.mat", "best3");
 fprintf("Best-3 arousal features saved\n");
 
 %% Function for sequentialfs

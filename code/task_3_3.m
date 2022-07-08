@@ -19,11 +19,9 @@ dataset = load("data/dataset.mat");
 features_names = dataset.dataset.Properties.VariableNames(5:58);
 best3_features_names = features_names(best_features);
 
-x_27= x_train(:,1);
-x_11=x_train(:,2);
-x_13=x_train(:,3);
-
-
+x_27 = x_train(:,1);
+x_11 = x_train(:,2);
+x_13 = x_train(:,3);
 
 %Plot histogram
 figure(1)
