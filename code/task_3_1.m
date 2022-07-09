@@ -15,7 +15,6 @@ y_test_arousal = test_arousal.best_arousal_testing.y_test'.';
 
 fprintf("Arousal features loaded\n");
 
-
 test_valence = load('data/testing_valence.mat');
 train_valence = load('data/training_valence.mat');
 x_train_valence = train_valence.best_valance_training.x_train';

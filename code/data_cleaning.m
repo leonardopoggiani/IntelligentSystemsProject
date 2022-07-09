@@ -13,7 +13,6 @@ is_inf = isinf(dataset);
 [rows_inf, ~] = find(is_inf == 1);
 dataset(rows_inf,:) = [];
 
-
 %% Removing outliers
 % I can ignore the first 2 lines because they don't have significant values
 dataset = dataset(:, 3:end);
@@ -28,7 +27,7 @@ fprintf("%i outliers removed\n", ret);
 
 EXTRACT_VALENCE = 1;
 EXTRACT_AROUSAL = 1;
-BALANCE = 1;
+BALANCING_DATA = 1;
 
 % getting arousal and valence levels
 arousal_level  = clean_dataset(:,1);
@@ -72,7 +71,7 @@ possible_values(7) = debug(27,1);
 rep = 40;
 row_to_check = final_rows;
 
-if BALANCE == 1
+if BALANCING_DATA == 1
     for k = 1:rep
         for i = 1:row_to_check
             if (clean_dataset(i,1)==possible_values(min_arousal) && clean_dataset(i,2)~=possible_values(max_valence)) || (clean_dataset(i,1)~=possible_values(max_arousal) && clean_dataset(i,2)==possible_values(min_valence))
@@ -93,7 +92,6 @@ if BALANCE == 1
             
             if((clean_dataset(i,1)==possible_values(max_arousal) && clean_dataset(i,2)~=possible_values(min_valence)) || (clean_dataset(i,2)==possible_values(max_valence) && clean_dataset(i,1)~=possible_values(min_arousal)))
                 clean_dataset(i,:)=[];
-                %fprintf(" I am removing the row %i\n",i);
             end
         end
         samples_arousal = groupcounts(clean_dataset(:,1));
@@ -136,7 +134,7 @@ x_test = features(idxTesting, :);
 y_test_arousal = target_arousal(idxTesting, :);
 y_test_valence = target_valence(idxTesting, :);
 
-sequentialfs_rep = 10;
+sequentialfs_rep = 30;
 
 
 %% Features extraction for Arousal
@@ -240,7 +238,7 @@ best3.y_test = y_test_arousal';
 best3.best_features=arousal_best3;
 best3.y_values= possible_values;
 % Save struct
-save("data/best_selected_features.mat", "best3");
+save("data/best3.mat", "best3");
 fprintf("Best-3 arousal features saved\n");
 
 %% Function for sequentialfs
