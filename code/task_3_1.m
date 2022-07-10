@@ -24,17 +24,20 @@ y_test_valence = test_valence.best_valance_testing.y_test'.';
 
 fprintf("Valence features loaded\n");
 
-MLP_AROUSAL = 0;
+MLP_AROUSAL = 1;
 MLP_VALENCE = 0;
 RBFN_AROUSAL = 0;
 RBFN_VALENCE = 0;
-TESTING = 1;
+TESTING = 0;
 
 %% MLP for Arousal
 
-% Experiments
+% Experiments for determining the hidden layer size
 if TESTING == 1 
     max_neurons_1 = 120;
+    R_saved = 0;
+    hiddenLayerSize_arousal = 0;
+    
     for i=5:5:max_neurons_1    
          mlp_net_arousal = fitnet(i);
          mlp_net_arousal.divideParam.trainRatio = 0.7;
@@ -42,46 +45,74 @@ if TESTING == 1
          mlp_net_arousal.divideParam.valRatio = 0.2;
          mlp_net_arousal.trainParam.showWindow = 0;
          mlp_net_arousal.trainParam.showCommandLine = 1;
-         mlp_net_arousal.trainParam.lr = 0.05; 
-         mlp_net_arousal.trainParam.epochs = 100;
+         mlp_net_arousal.trainParam.lr = 0.1; 
+         mlp_net_arousal.trainParam.epochs = 150;
          mlp_net_arousal.trainParam.max_fail = 10;
          [mlp_net_arousal, tr_arousal] = train(mlp_net_arousal, x_train_arousal, y_train_arousal);
 
          test_output_arousal = mlp_net_arousal(x_test_arousal);
-         plotregression(y_test_arousal, test_output_arousal, ['Final test arousal: ' string(i)]);
+         v = figure;
+         plotregression(y_test_arousal, test_output_arousal);
+         
+         str = v.Children(3).Title.String;
+         ind=find(str=='=');
+         R_in_str =str(ind+1:end);
+         R=str2double(R_in_str);
+         if R_saved < R
+             R_saved = R;
+             hiddenLayerSize_arousal = i;
+         end
     end
     
+    fprintf("Max R value saved: %d for hiddenLayerSize %d \n", R, hiddenLayerSize_arousal);
+    
     max_neurons = 120;
+    R_saved = 0;
+    hiddenLayerSize_valence = 0;
+    
     for i=5:5:max_neurons
         mlp_net_valence = fitnet(i);
-        mlp_net_valence.divideParam.trainRatio = 0.8; 
+        mlp_net_valence.divideParam.trainRatio = 0.7; 
         mlp_net_valence.divideParam.valRatio = 0.2; 
-        mlp_net_valence.divideParam.testRatio = 0;
+        mlp_net_valence.divideParam.testRatio = 0.1;
         mlp_net_valence.trainParam.showWindow = 0;
         mlp_net_valence.trainParam.showCommandLine = 1;
         mlp_net_valence.trainParam.lr = 0.1; 
         mlp_net_valence.trainParam.epochs = 100;
         mlp_net_valence.trainParam.max_fail = 15;
         [mlp_net_valence, tr_valence] = train(mlp_net_valence, x_train_valence, y_train_valence);
-
-
+        
         test_output_valence = mlp_net_valence(x_test_valence);
-        plotregression(y_test_valence, test_output_valence, ['Final test valence: ' string(i)]);
+        v = figure;
+        plotregression(y_test_valence, test_output_valence);
+        
+        str = v.Children(3).Title.String;
+        ind=find(str=='=');
+        R_in_str =str(ind+1:end);
+        R=str2double(R_in_str);
+        if R_saved < R
+             R_saved = R;
+             hiddenLayerSize_valence = i;
+         end
     end
+    
+    fprintf("Max R value saved: %d for hidden layer %d \n", R, hiddenLayerSize_valence);
+
 end
 
 if MLP_AROUSAL == 1
-    % Creation of MLP
-    hiddenLayerSize_arousal = 75;
+    % Creation of MLP for arousal
+    hiddenLayerSize_arousal = 25;
     mlp_arousal = fitnet(hiddenLayerSize_arousal);
     mlp_arousal.divideParam.trainRatio = 0.7;
     mlp_arousal.divideParam.testRatio = 0.1;
     mlp_arousal.divideParam.valRatio = 0.2;
     mlp_arousal.divideParam.lr = 0.1;
+    mlp_arousal.trainParam.epochs = 110;
+    mlp_arousal.trainParam.max_fail = 10;
+    
     mlp_arousal.trainParam.showCommandLine = 1;
     %mlp_arousal.trainParam.showWindow=0;
-    mlp_arousal.trainParam.epochs = 100;
-    mlp_arousal.trainParam.max_fail = 10;
 
     %Training
     [mlp_arousal, tr] = train(mlp_arousal, x_train_arousal, y_train_arousal);
@@ -98,17 +129,18 @@ end
 %% MLP for Valence
 
 if MLP_VALENCE == 1
-    % Creation of MLP
-    hiddenLayerSize_valence = 80;
+    % Creation of MLP for valence
+    hiddenLayerSize_valence = 45;
     mlp_valence = fitnet(hiddenLayerSize_valence);
     mlp_valence.divideParam.trainRatio = 0.7;
     mlp_valence.divideParam.testRatio = 0.1;
     mlp_valence.divideParam.valRatio = 0.2;
-    mlp_valence.trainParam.showCommandLine = 1;
     mlp_valence.trainParam.lr = 0.1; 
-    %mlp_valence.trainParam.showWindow=0;
-    mlp_valence.trainParam.epochs = 100;
+    mlp_valence.trainParam.epochs = 110;
     mlp_net_valence.trainParam.max_fail = 15;
+    
+    %mlp_valence.trainParam.showWindow=0;
+    mlp_valence.trainParam.showCommandLine = 1;
 
     % Training
     [mlp_valence, tr_v] = train(mlp_valence, x_train_valence, y_train_valence);
@@ -144,8 +176,8 @@ end
 
 if RBFN_VALENCE == 1
     %Creation of RBFN
-    goal_vl = 0;
-    spread_vl = 0.7;
+    goal_va = 0;
+    spread_va = 0.7;
     K_va = 1200;
     Ki_va = 100; %in order to speed up the training instead of the default 50
     
