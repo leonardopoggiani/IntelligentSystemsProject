@@ -5,16 +5,29 @@ clc
 format compact
 
 %% Load data
+% if we want to classify just two classes instead of all four classes (more
+% computationally demanding) just set this variable
+CLASSIFICATION = 2;
 
-image_data = imageDatastore("data/images/selected",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+if CLASSIFICATION == 0
+    image_data = imageDatastore("data/images/selected/classification_2_classes/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+elseif CLASSIFICATION == 1
+        image_data = imageDatastore("data/images/selected/classification_4_classes/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+else
+        image_data = imageDatastore("data/images/1000_images/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+end
+
 % 70 per training, 20 per validation, 10 per test
 [data_train, data_valtest] = splitEachLabel(image_data, 0.7, 'randomized');
 [data_validation, data_test] = splitEachLabel(image_data, 0.2, 'randomized');
 numClasses = numel(categories(data_train.Labels));
+
 %% Alexnet
+
 net = alexnet;
 input_size = net.Layers(1).InputSize;
-%Extract all the layers except the last 3
+
+% Extract all the layers except the last 3
 original_layers = net.Layers(1:end-3);
 
 layers = [
@@ -44,22 +57,27 @@ options = trainingOptions('sgdm', ...
     'Plots', 'training-progress');
 
 %% Training
+
 new_CNN = trainNetwork(augmented_image_data_train, layers, options);
 hold on
+
 %% Training
+
 hold on
-[res_train, scores_train] = classify(new_CNN, augmented_image_data_train)
+[res_train, scores_train] = classify(new_CNN, augmented_image_data_train);
 target_train = data_train.Labels;
-accuracy_train = mean (target_train==res_train)
+accuracy_train = mean (target_train==res_train);
 plotconfusion(target_train, res_train)
+
 %% Validation
-[res_val, scores_val] = classify(new_CNN, augmented_image_data_validation)
+
+[res_val, scores_val] = classify(new_CNN, augmented_image_data_validation);
 target_val = data_validation.Labels;
-accuracy_val= mean (target_val==res_val)
+accuracy_val= mean (target_val==res_val);
 plotconfusion(target_val, res_val)
 
 %% Testing
-[res_test, scores_test] = classify(new_CNN, augmented_image_data_test)
+[res_test, scores_test] = classify(new_CNN, augmented_image_data_test);
 target_test = data_test.Labels;
-accuracy_test = mean (target_test==res_test)
+accuracy_test = mean(target_test==res_test);
 plotconfusion(target_test, res_test)

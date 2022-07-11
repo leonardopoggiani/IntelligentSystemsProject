@@ -1,0 +1,9 @@
+pixelRange = [-30 30];
+imageAugmenter = imageDataAugmenter( ...
+    'RandXReflection',true, ...
+    'RandXTranslation',pixelRange, ...
+    'RandYTranslation',pixelRange);
+
+augmented_image_data_train = augmentedImageDatastore(input_size(1:2), data_train, 'DataAugmentation', imageAugmenter);
+augmented_image_data_validation = augmentedImageDatastore(input_size(1:2), data_validation);
+augmented_image_data_test = augmentedImageDatastore(input_size(1:2), data_test);
