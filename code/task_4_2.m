@@ -6,7 +6,7 @@ format compact
 
 %% Load data
 
-image_data = imageDatastore("data\images\selected",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+image_data = imageDatastore("data/images/selected",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
 % 70 per training, 20 per validation, 10 per test
 [data_train, data_valtest] = splitEachLabel(image_data, 0.7, 'randomized');
 [data_validation, data_test] = splitEachLabel(image_data, 0.2, 'randomized');

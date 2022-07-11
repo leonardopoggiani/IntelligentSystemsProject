@@ -25,9 +25,9 @@ y_test_valence = test_valence.best_valance_testing.y_test'.';
 fprintf("Valence features loaded\n");
 
 MLP_AROUSAL = 1;
-MLP_VALENCE = 0;
-RBFN_AROUSAL = 0;
-RBFN_VALENCE = 0;
+MLP_VALENCE = 1;
+RBFN_AROUSAL = 1;
+RBFN_VALENCE = 1;
 TESTING = 0;
 
 %% MLP for Arousal
@@ -98,7 +98,7 @@ if TESTING == 1
     
     fprintf("Max R value saved: %d for hidden layer %d \n", R, hiddenLayerSize_valence);
 
-end
+end100
 
 if MLP_AROUSAL == 1
     % Creation of MLP for arousal
@@ -160,8 +160,8 @@ if RBFN_AROUSAL == 1
     %Creation of RBFN
     goal_ar = 0;
     spread_ar = 1.07;
-    K_ar = 1200;
-    Ki_ar = 100; %in order to speed up the training instead of the default 50
+    K_ar = 500;
+    Ki_ar = 50;
 
     rbf_arousal = newrb(x_train_arousal,y_train_arousal,goal_ar,spread_ar,K_ar,Ki_ar);
     view (rbf_arousal);
@@ -178,8 +178,8 @@ if RBFN_VALENCE == 1
     %Creation of RBFN
     goal_va = 0;
     spread_va = 0.7;
-    K_va = 1200;
-    Ki_va = 100; %in order to speed up the training instead of the default 50
+    K_va = 500;
+    Ki_va = 50;
     
     rbf_valence = newrb(x_train_valence,y_train_valence,goal_va,spread_va, K_va, Ki_va);
     view (rbf_valence);

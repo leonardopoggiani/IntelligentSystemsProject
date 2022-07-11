@@ -134,5 +134,6 @@ title('Scatterplot of feature 11 and feature 13');
 
 
 %% Evaluation of Mamdani
+
 fis = readfis('Mamdani');
 output=evalfis(fis, [1 1 2]);
