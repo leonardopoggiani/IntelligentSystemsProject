@@ -136,7 +136,6 @@ y_test_valence = target_valence(idxTesting, :);
 
 sequentialfs_rep = 30;
 
-
 %% Features extraction for Arousal
 if EXTRACT_AROUSAL == 1
     features_arousal = [zeros(1,54); 1:54]';

@@ -7,14 +7,20 @@ format compact
 %% Load data
 % if we want to classify just two classes instead of all four classes (more
 % computationally demanding) just set this variable
-CLASSIFICATION = 2;
+CLASSIFICATION = 5;
 
 if CLASSIFICATION == 0
     image_data = imageDatastore("data/images/selected/classification_2_classes/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
 elseif CLASSIFICATION == 1
         image_data = imageDatastore("data/images/selected/classification_4_classes/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
-else
+elseif CLASSIFICATION == 2
+        image_data = imageDatastore("data/images/noSelected/classification_2_classes/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+elseif CLASSIFICATION == 3
+        image_data = imageDatastore("data/images/noSelected/classification_4_classes/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+elseif CLASSIFICATION == 4
         image_data = imageDatastore("data/images/1000_images/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+elseif CLASSIFICATION == 5
+        image_data = imageDatastore("data/images/500_images/",'IncludeSubfolders', true, 'LabelSource', 'foldernames');
 end
 
 % 70 per training, 20 per validation, 10 per test
